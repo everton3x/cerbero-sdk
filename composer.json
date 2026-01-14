@@ -1,0 +1,21 @@
+{
+    "name": "everton3x/cerbero",
+    "description": "Autenticação e autorização centralizada para aplicações web.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Cerbero\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Everton da Rosa",
+            "email": "everton3x@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        
+    }
+}
