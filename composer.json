@@ -30,7 +30,9 @@
     },
     "require-dev": {
         "pestphp/pest": "*",
-        "pestphp/pest-plugin-type-coverage": "^5.0"
+        "pestphp/pest-plugin-type-coverage": "^5.0",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.2"
     },
     "autoload": {
         "psr-4": {
@@ -46,12 +48,14 @@
     "prefer-stable": true,
     "config": {
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
         }
     },
     "scripts": {
         "test": "./vendor/bin/pest",
         "coverage": "./vendor/bin/pest --coverage --coverage-html ./coverage/html/",
-        "type-coverage": "./vendor/bin/pest --type-coverage"
+        "type-coverage": "./vendor/bin/pest --type-coverage",
+        "static": "vendor/bin/phpstan analyse"
     }
 }

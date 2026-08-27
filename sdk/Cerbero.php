@@ -15,7 +15,7 @@ use PDO;
 final class Cerbero
 {
     private ?PDO $pdo = null;
-    
+
     public function __construct(
         public readonly array $config = []
     ) {
