@@ -49,6 +49,6 @@
         }
     },
     "scripts": {
-        "test": "./vendor/bin/pest --coverage"
+        "test": "./vendor/bin/pest --coverage --coverage-html ./coverage/html/"
     }
 }
