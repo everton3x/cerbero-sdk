@@ -11,9 +11,7 @@
     </testsuites>
     <source>
         <include>
-            <directory>app</directory>
-            <directory>src</directory>
-            <directory>sdk</directory>
+            <directory suffix=".php">sdk</directory>
         </include>
     </source>
 </phpunit>
