@@ -2,6 +2,7 @@
 
 namespace Cerbero\Sdk;
 
+use Cerbero\Sdk\Exception\LimitLoginAttempts;
 use Cerbero\Sdk\Exception\UserNotAuthenticated;
 use Cerbero\Sdk\Exception\UserNotAuthorized;
 use Cerbero\Sdk\Exception\UserOrPasswordInvalid;
@@ -10,6 +11,7 @@ use Cerbero\Sdk\Support\Enum\ProfileStatus;
 use Cerbero\Sdk\Support\Enum\RelationStatus;
 use Cerbero\Sdk\Support\Enum\SystemStatus;
 use Cerbero\Sdk\Support\Enum\UserStatus;
+use Cerbero\Sdk\Support\Helper\UserHelper;
 use PDO;
 use RuntimeException;
 
@@ -39,7 +41,8 @@ final class Cerbero
      *     pdoDsn: string,
      *     pdoUser?: string|null,
      *     pdoPass?: string|null,
-     *     pdoOptions?: array<int|string, mixed>|null
+     *     pdoOptions?: array<int|string, mixed>|null,
+     *     maxLoginAttempts?: int|null
      * } $config Array associativo com as opções de conexão PDO (pdoDsn, pdoUser, pdoPass, pdoOptions).
      */
     public function __construct(
@@ -160,9 +163,16 @@ final class Cerbero
      * @param string $password Senha do usuário em texto plano para conferência com o hash armazenado.
      * @return string Retorna o novo token de sessão gerado.
      * @throws UserOrPasswordInvalid Lançada se o usuário não for encontrado ou a senha for inválida.
+     * @throws LimitLoginAttempts Lançada se o número máximo de tentativas de login for excedido.
      */
     public function authenticate(string $userId, string $password): string {
         if(is_null($this->pdo)) throw new RuntimeException('No database connection');
+
+        if(isset($this->config['maxLoginAttempts'])){
+            $attempts = UserHelper::registerLoginAttempt($this->pdo, $userId);
+            if($attempts > $this->config['maxLoginAttempts']) throw new LimitLoginAttempts($userId);
+        }
+
         $stmt = $this->pdo->prepare('SELECT password_hash FROM crb_users WHERE id = :id;');
         $stmt->execute([
             ':id' => $userId
@@ -179,6 +189,7 @@ final class Cerbero
             ':session_token' => $sessionToken,
             ':status' => UserStatus::Active->value
         ]);
+        UserHelper::resetLoginAttempt($this->pdo, $userId);
         return $sessionToken;
     }
     

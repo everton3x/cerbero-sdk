@@ -60,6 +60,7 @@ CREATE TABLE "crb_users" (
 	"status"	INTEGER NOT NULL,
 	"password_hash"	TEXT,
 	"session_token"	TEXT,
+	"login_attempts"	INTEGER DEFAULT 0,
 	PRIMARY KEY("id")
 );
 COMMIT;

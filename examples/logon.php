@@ -1,6 +1,7 @@
 <?php
 
 use Cerbero\Sdk\Cerbero;
+use Cerbero\Sdk\Exception\LimitLoginAttempts;
 use Cerbero\Sdk\Exception\UserOrPasswordInvalid;
 
 session_start();
@@ -15,6 +16,10 @@ try {
     $_SESSION['crb_user_id'] = $_POST['user-id'];
 } catch (UserOrPasswordInvalid $ex) {
     $session_token = null;
+    $errorMessage = 'Usuário ou senha inválido.';
+} catch (LimitLoginAttempts $ex) {
+    $session_token = null;
+    $errorMessage = 'Limites de tentativas de login do usuário alcançado.';
 }
 ?>
 
@@ -42,7 +47,7 @@ try {
                 <div class="header">
                   Falha no logon.
                 </div>
-                <p>Usuário ou senha inválido.</p>
+                <p><?=$errorMessage;?></p>
                 <p>
                     <a href="login.php">Clique aqui para voltar à página de login.</a>
                 </p>

@@ -7,4 +7,5 @@ return [
     'pdoOptions' => [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     ],
+    'maxLoginAttempts' => 3
 ];

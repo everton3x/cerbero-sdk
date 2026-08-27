@@ -21,8 +21,8 @@ INSERT INTO "crb_user_system" ("user_id","system_slug","status") VALUES ('admin'
  ('editor','example',1),
  ('guest','example',1),
  ('admin','test',1);
-INSERT INTO "crb_users" ("id","name","status","password_hash","session_token") VALUES ('admin','Administrador',1,'$argon2id$v=19$m=65536,t=4,p=1$Ni56SjI4OHpUZFZDT3V0bA$tS0ui5LLpuEOPR7v8X8+UUv3DRXFMo2U/8nH6A6+ewg',NULL),
- ('editor','Editor',1,'$argon2id$v=19$m=65536,t=4,p=1$Ni56SjI4OHpUZFZDT3V0bA$tS0ui5LLpuEOPR7v8X8+UUv3DRXFMo2U/8nH6A6+ewg',NULL),
- ('guest','Visitante',1,'$argon2id$v=19$m=65536,t=4,p=1$Ni56SjI4OHpUZFZDT3V0bA$tS0ui5LLpuEOPR7v8X8+UUv3DRXFMo2U/8nH6A6+ewg',NULL),
- ('fake','Usuário fake',3,'$argon2id$v=19$m=65536,t=4,p=1$Ni56SjI4OHpUZFZDT3V0bA$tS0ui5LLpuEOPR7v8X8+UUv3DRXFMo2U/8nH6A6+ewg',NULL);
+INSERT INTO "crb_users" ("id","name","status","password_hash","session_token","login_attempts") VALUES ('admin','Administrador',1,'$argon2id$v=19$m=65536,t=4,p=1$Ni56SjI4OHpUZFZDT3V0bA$tS0ui5LLpuEOPR7v8X8+UUv3DRXFMo2U/8nH6A6+ewg',NULL,0),
+ ('editor','Editor',1,'$argon2id$v=19$m=65536,t=4,p=1$Ni56SjI4OHpUZFZDT3V0bA$tS0ui5LLpuEOPR7v8X8+UUv3DRXFMo2U/8nH6A6+ewg',NULL,0),
+ ('guest','Visitante',1,'$argon2id$v=19$m=65536,t=4,p=1$Ni56SjI4OHpUZFZDT3V0bA$tS0ui5LLpuEOPR7v8X8+UUv3DRXFMo2U/8nH6A6+ewg',NULL,0),
+ ('fake','Usuário fake',3,'$argon2id$v=19$m=65536,t=4,p=1$Ni56SjI4OHpUZFZDT3V0bA$tS0ui5LLpuEOPR7v8X8+UUv3DRXFMo2U/8nH6A6+ewg',NULL,0);
 COMMIT;
