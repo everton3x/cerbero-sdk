@@ -28,10 +28,11 @@ final class Cerbero
     }
     
     public function authenticated(string $userId, string $sessionToken): bool {
-        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM crb_users WHERE id = :id AND session_token = :session_token;');
+        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM crb_users WHERE id = :id AND session_token = :session_token AND status = :status;');
         $stmt->execute([
             ':id' => $userId,
-            ':session_token' => $sessionToken
+            ':session_token' => $sessionToken,
+            ':status' => UserStatus::Active->value
         ]);
         return (bool) $stmt->fetchColumn(0);
     }
