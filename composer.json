@@ -1,0 +1,46 @@
+{
+    "name": "cerbero/cerbero-sdk",
+    "description": "SDK para autenticação e autorização.",
+    "version": "2.0.0-dev",
+    "type": "library",
+    "keywords": [
+        "autenticacao",
+        "autorizacao",
+        "controle de acesso"
+    ],
+    "homepage": "https://cerbero.github.io",
+    "readme": "README.md",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Everton da Rosa",
+            "email": "everton3x@gmail.com",
+            "homepage": "https://everton3x.github.io",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "everton3x@gmail.com",
+        "issues": "https://github.com/cerbero/issues",
+        "source": "https://github.com/cerbero/source",
+        "docs": "https://github.com/cerbero/docs"
+    },
+    "require": {
+        "php": ">=8.5.7"
+    },
+    "require-dev": {
+        "pestphp/pest": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cerbero\\Sdk\\": "sdk/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
