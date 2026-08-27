@@ -11,6 +11,7 @@ use Cerbero\Sdk\Support\Enum\RelationStatus;
 use Cerbero\Sdk\Support\Enum\SystemStatus;
 use Cerbero\Sdk\Support\Enum\UserStatus;
 use PDO;
+use RuntimeException;
 
 /**
  * Classe principal do SDK Cerbero.
@@ -39,16 +40,16 @@ final class Cerbero
      *     pdoUser?: string|null,
      *     pdoPass?: string|null,
      *     pdoOptions?: array<int|string, mixed>|null
-     * }|array<string, mixed> $config Array associativo com as opções de conexão PDO (pdoDsn, pdoUser, pdoPass, pdoOptions).
+     * } $config Array associativo com as opções de conexão PDO (pdoDsn, pdoUser, pdoPass, pdoOptions).
      */
     public function __construct(
-        public readonly array $config = []
+        public readonly array $config
     ) {
         $this->pdo = new PDO(
             $this->config['pdoDsn'],
-            $this->config['pdoUser'],
-            $this->config['pdoPass'],
-            $this->config['pdoOptions']
+            $this->config['pdoUser'] ?? null,
+            $this->config['pdoPass'] ?? null,
+            $this->config['pdoOptions'] ?? null
         );
     }
     
@@ -60,6 +61,7 @@ final class Cerbero
      * @return bool Retorna true se o usuário e o token de sessão forem válidos e estiverem ativos; caso contrário, false.
      */
     public function authenticated(string $userId, string $sessionToken): bool {
+        if(is_null($this->pdo)) throw new RuntimeException('No database connection');
         $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM crb_users WHERE id = :id AND session_token = :session_token AND status = :status;');
         $stmt->execute([
             ':id' => $userId,
@@ -80,7 +82,7 @@ final class Cerbero
      */
     public function access(string $userId, string $sessionToken, string $systemSlug): bool {
         if(!$this->authenticated($userId, $sessionToken)) throw new UserNotAuthenticated($userId);
-        
+        if(is_null($this->pdo)) throw new RuntimeException('No database connection');
         $stmt = $this->pdo->prepare('SELECT count(*) FROM crb_user_system r, crb_users u, crb_systems s WHERE r.user_id = :user_id AND r.system_slug = :system_slug AND r.status = :rstatus AND u.status = :ustatus AND s.status = :sstatus AND r.user_id = u.id AND r.system_slug = s.slug;');
         $stmt->execute([
             ':user_id' => $userId,
@@ -108,7 +110,7 @@ final class Cerbero
      */
     public function authorizated(string $userId, string $sessionToken, string $systemSlug, string $permissionSlug): bool {
         if(!$this->access($userId, $sessionToken, $systemSlug)) throw new UserNotAuthorized($userId, $systemSlug);
-        
+        if(is_null($this->pdo)) throw new RuntimeException('No database connection');
         $stmt = $this->pdo->prepare('SELECT count(*) FROM crb_user_permission r, crb_users u, crb_systems s, crb_permissions p WHERE r.user_id = :user_id AND r.system_slug = :system_slug AND r.permission_slug = :permission_slug AND r.status = :rstatus AND u.status = :ustatus AND s.status = :sstatus AND p.status = :pstatus AND r.user_id = u.id AND r.system_slug = s.slug AND r.permission_slug = p.slug;');
         $stmt->execute([
             ':user_id' => $userId,
@@ -133,6 +135,7 @@ final class Cerbero
      * @return bool Retorna true se o usuário possuir a permissão via perfil ativo; caso contrário, false.
      */
     private function profileAuthorizated(string $userId, string $systemSlug, string $permissionSlug): bool {
+        if(is_null($this->pdo)) throw new RuntimeException('No database connection');
         $stmt = $this->pdo->prepare('SELECT count(*) FROM crb_profile_permission pp INNER JOIN crb_user_profile up ON up.system_slug = pp.system_slug AND up.profile_slug = pp.profile_slug AND up.user_id = :user_id AND up.status = :rstatus INNER JOIN crb_permissions p ON p.system_slug = pp.system_slug AND p.slug = pp.permission_slug AND p.status = :pstatus INNER JOIN crb_profiles pr ON pr.system_slug = pp.system_slug AND pr.slug = pp.profile_slug AND pr.status = :prstatus INNER JOIN crb_systems s ON s.slug = pp.system_slug AND s.status = :sstatus INNER JOIN crb_user_profile usp ON usp.system_slug = pp.system_slug AND usp.profile_slug = pp.profile_slug AND usp.status = :rstatus INNER JOIN crb_user_system us ON us.system_slug = pp.system_slug AND us.user_id = up.user_id AND us.status = :rstatus INNER JOIN crb_users u ON u.id = up.user_id AND u.status = :ustatus WHERE pp.system_slug = :system_slug AND pp.permission_slug = :permission_slug AND pp.status = :rstatus;');
         $stmt->execute([
             ':user_id' => $userId,
@@ -159,12 +162,15 @@ final class Cerbero
      * @throws UserOrPasswordInvalid Lançada se o usuário não for encontrado ou a senha for inválida.
      */
     public function authenticate(string $userId, string $password): string {
+        if(is_null($this->pdo)) throw new RuntimeException('No database connection');
         $stmt = $this->pdo->prepare('SELECT password_hash FROM crb_users WHERE id = :id;');
         $stmt->execute([
             ':id' => $userId
         ]);
+        
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if(($result === false) || (password_verify($password, $result['password_hash']) == false)) throw new UserOrPasswordInvalid($userId);
+        if(!is_array($result) || !isset($result['password_hash']) || !is_string($result['password_hash'])) throw new UserOrPasswordInvalid($userId);
+        if(password_verify($password, $result['password_hash']) == false) throw new UserOrPasswordInvalid($userId);
         
         $sessionToken = uniqid(prefix: '', more_entropy: true);
         $stmt = $this->pdo->prepare('UPDATE crb_users SET session_token = :session_token WHERE id = :id AND status = :status;');
@@ -183,6 +189,7 @@ final class Cerbero
      * @return void
      */
     public function unauthenticate(string $userId): void {
+        if(is_null($this->pdo)) throw new RuntimeException('No database connection');
         $stmt = $this->pdo->prepare('UPDATE crb_users SET session_token = NULL WHERE id = :id;');
         $stmt->execute([
             ':id' => $userId
@@ -196,6 +203,7 @@ final class Cerbero
      * @return bool Retorna true se o token existir e estiver atribuído a um usuário; caso contrário, false.
      */
     public function checkSessionToken(?string $sessionToken): bool {
+        if(is_null($this->pdo)) throw new RuntimeException('No database connection');
         $stmt = $this->pdo->prepare('SELECT count(*) FROM crb_users WHERE session_token = :session_token;');
         $stmt->execute([
             ':session_token' => $sessionToken
