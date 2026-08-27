@@ -17,7 +17,7 @@ final class Cerbero
     private ?PDO $pdo = null;
     
     public function __construct(
-        public array $config = []
+        public readonly array $config = []
     ) {
         $this->pdo = new PDO(
             $this->config['pdoDsn'],
