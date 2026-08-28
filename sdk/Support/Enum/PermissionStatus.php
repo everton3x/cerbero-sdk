@@ -7,7 +7,8 @@ namespace Cerbero\Sdk\Support\Enum;
  *
  * @package Cerbero\Sdk\Support\Enum
  */
-enum PermissionStatus: int {
+enum PermissionStatus: int
+{
     /**
      * Estado indefinido ou não configurado.
      */

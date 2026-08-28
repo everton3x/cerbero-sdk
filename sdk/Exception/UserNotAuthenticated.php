@@ -9,13 +9,15 @@ use RuntimeException;
  *
  * @package Cerbero\Sdk\Exception
  */
-class UserNotAuthenticated extends RuntimeException {
+class UserNotAuthenticated extends RuntimeException
+{
     /**
      * Construtor da exceção UserNotAuthenticated.
      *
      * @param string $userId Identificador do usuário que não está autenticado.
      */
-    public function __construct(public readonly string $userId) {
+    public function __construct(public readonly string $userId)
+    {
         parent::__construct('User not authenticated.');
     }
 }

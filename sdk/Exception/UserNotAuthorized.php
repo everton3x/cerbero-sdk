@@ -9,7 +9,8 @@ use RuntimeException;
  *
  * @package Cerbero\Sdk\Exception
  */
-class UserNotAuthorized extends RuntimeException {
+class UserNotAuthorized extends RuntimeException
+{
     /**
      * Construtor da exceção UserNotAuthorized.
      *
@@ -17,8 +18,8 @@ class UserNotAuthorized extends RuntimeException {
      * @param string $systemSlug Identificador slug do sistema solicitado.
      */
     public function __construct(
-            public readonly string $userId,
-            public readonly string $systemSlug
+        public readonly string $userId,
+        public readonly string $systemSlug
     ) {
         parent::__construct('User not authorized for system.');
     }

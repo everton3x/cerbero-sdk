@@ -9,14 +9,15 @@ use RuntimeException;
  *
  * @package Cerbero\Sdk\Exception
  */
-class UserOrPasswordInvalid extends RuntimeException {
+class UserOrPasswordInvalid extends RuntimeException
+{
     /**
      * Construtor da exceção UserOrPasswordInvalid.
      *
      * @param string $userId Identificador do usuário cujas credenciais são inválidas.
      */
     public function __construct(
-            public readonly string $userId
+        public readonly string $userId
     ) {
         parent::__construct('User or password invalid.');
     }

@@ -9,13 +9,15 @@ use RuntimeException;
  *
  * @package Cerbero\Sdk\Exception
  */
-class LimitLoginAttempts extends RuntimeException {
+class LimitLoginAttempts extends RuntimeException
+{
     /**
      * Construtor da exceção LimitLoginAttempts.
      *
      * @param string $userId Identificador do usuário que atingiu o limite de tentativas.
      */
-    public function __construct(public readonly string $userId) {
+    public function __construct(public readonly string $userId)
+    {
         parent::__construct('Maximum login attempts reached.');
     }
 }

@@ -7,7 +7,8 @@ namespace Cerbero\Sdk\Support\Enum;
  *
  * @package Cerbero\Sdk\Support\Enum
  */
-enum ProfileStatus: int {
+enum ProfileStatus: int
+{
     /**
      * Estado indefinido ou não configurado.
      */
