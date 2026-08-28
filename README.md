@@ -262,18 +262,32 @@ Em seguida, acesse no navegador: `http://localhost:8000`
 
 ## Testes e Qualidade de Código
 
-Para rodar os testes automatizados e ferramentas de análise estática:
+O projeto conta com ferramentas automatizadas configuradas no `composer.json` para garantir qualidade, segurança de tipos e conformidade com padrões de código:
 
 ```bash
-# Executar a suíte de testes (Pest)
+# Executar a suíte de testes com cobertura HTML e validação de tipos (Pest)
 composer test
 
-# Executar a análise estática (PHPStan Nível 6)
+# Executar a análise estática avançada (PHPStan Nível 6)
 composer static
 
-# Verificar cobertura de tipos (100%)
-composer type-coverage
+# Executar correção e validação de padrões de código PSR (PSR-1, PSR-2 e PSR-12)
+composer code
+
+# Corrigir automaticamente inconformidades de estilo no diretório sdk/ (phpcbf)
+composer fix-code
+
+# Inspecionar conformidade com padrões PSR no diretório sdk/ (phpcs)
+composer psr-code
 ```
+
+### Detalhamento dos Scripts
+
+- **`composer test`**: Executa a suíte de testes do Pest, gerando o relatório de cobertura de código em `coverage/html/` e avaliando a cobertura de tipos estáticos (100%).
+- **`composer static`**: Executa o PHPStan (`vendor/bin/phpstan analyse`) para detecção estática de erros e consistência de tipos.
+- **`composer code`**: Encadeia a correção automática (`@fix-code`) e a validação (`@psr-code`) de conformidade com os padrões PSR-1, PSR-2 e PSR-12.
+- **`composer fix-code`**: Utiliza o `phpcbf` para formatar e corrigir automaticamente o código do diretório `sdk/`.
+- **`composer psr-code`**: Utiliza o `phpcs` para validar a conformidade do código do diretório `sdk/` com as especificações PSR.
 
 ---
 
