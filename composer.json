@@ -1,5 +1,5 @@
 {
-    "name": "cerbero/cerbero-sdk",
+    "name": "everton3x/cerbero-sdk",
     "description": "SDK para autenticação e autorização.",
     "version": "2.0.0-dev",
     "type": "library",
@@ -21,9 +21,9 @@
     ],
     "support": {
         "email": "everton3x@gmail.com",
-        "issues": "https://github.com/cerbero/issues",
-        "source": "https://github.com/cerbero/source",
-        "docs": "https://github.com/cerbero/docs"
+        "issues": "https://github.com/everton3x/cerbero/issues",
+        "source": "https://github.com/everton3x/cerbero/source",
+        "docs": "https://github.com/everton3x/cerbero/README.md"
     },
     "require": {
         "php": ">=8.5.7"
